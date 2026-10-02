@@ -55,8 +55,8 @@ app.use("/api",analyzeRoute)
 
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>console.log("mongo db connected"))
-.catch((err)=>console.log(err))
-
+// .catch((err)=>console.log(err))
+.catch((err)=>console.log("mongo error",err.message))
 
 app.listen(PORT,()=>console.log(`server started at port ${PORT}`))
 
