@@ -15,40 +15,37 @@ export default function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const [confirmpassword, setconfirmpassword] = useState("")
   const navigate=useNavigate();
-
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (password !== confirmpassword) {
+        setMessage("Passwords do not match!");
+        return;
+    }
 
     setLoading(true);
     setMessage("");
 
     try {
-      const res = await axios.post(
-        `${API_URL}/api/auth/reset-password/${token}`,
-        { password }
-      );
+        const res = await axios.post(
+            `${API_URL}/api/auth/reset-password/${token}`,
+            { password }
+        );
 
-      setMessage(res.data.msg);
+        setMessage(res.data.msg);
 
-      setTimeout(() => {
-        navigate("/login")
-        
-      }, 1500);
-
-
-      if(password!==confirmpassword){
-        setMessage("Passwords do not match!")
-      }
+        setTimeout(() => {
+            navigate("/login");
+        }, 1500);
 
     } catch (error) {
-      setMessage(
-        error.response?.data?.msg || "Something went wrong"
-      );
+        setMessage(
+            error.response?.data?.msg || "Something went wrong"
+        );
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
-
+};
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4">
 

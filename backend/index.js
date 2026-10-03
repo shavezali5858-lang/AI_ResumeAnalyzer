@@ -1,7 +1,14 @@
-const express=require("express")
-const dotenv=require("dotenv")
+const dns = require("dns");
 
-dotenv.config();
+dns.setDefaultResultOrder("ipv4first");
+
+require("dotenv").config();
+
+console.log("MONGO URI loaded:", !!process.env.MONGO_URI);
+const express=require("express")
+
+
+
 const PORT=process.env.PORT||8000;
 const Multerroutes=require("./routes/MulterRoutes")
 
