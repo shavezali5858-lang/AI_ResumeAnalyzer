@@ -16,7 +16,7 @@ const app=express()
 
 app.use(cors({
     origin:[ "http://localhost:5173",
-        "https://ai-resumeanalyzer-efsv.onrender.com/"
+        "https://ai-resume-analyzer-nx5g.onrender.com"
 
     ],
 
