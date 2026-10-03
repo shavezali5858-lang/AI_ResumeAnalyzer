@@ -21,8 +21,11 @@ const cors=require("cors")
 const Authroutes=require("./routes/Authroutes")
 const app=express()
 
+app.set("trust proxy", 1);
+
 app.use(cors({
-    origin:[ "http://localhost:5173",
+    origin:[
+         "http://localhost:5173",
         "https://ai-resume-analyzer-nx5g.onrender.com"
 
     ],
