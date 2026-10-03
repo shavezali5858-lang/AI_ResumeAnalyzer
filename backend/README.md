@@ -55,6 +55,11 @@ An AI-powered resume analysis platform that helps users evaluate their resumes a
 
 ---
 
+
+### live link demo 
+ link -> https://ai-resume-analyzer-nx5g.onrender.com/
+ ---
+
 ## 📂 Project Structure
 
 ```text
