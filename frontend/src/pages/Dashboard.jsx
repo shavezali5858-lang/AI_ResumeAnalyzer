@@ -366,6 +366,7 @@ navigate("/login")
                    active:scale-105 transition"
         onClick={Filehandle}
         disabled={loading}
+        type='button'
       >
         {loading ? (
           <span className="flex items-center justify-center gap-2">
