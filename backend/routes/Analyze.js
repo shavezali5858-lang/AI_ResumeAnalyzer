@@ -4,6 +4,7 @@ const express=require("express")
 
 const userMiddleware=require("../middlewares/userMiddleware")
 const   File=require("../models/filemodel")
+const { Type } = require("@google/genai");
 const gemini=require("../config/gemini")
 // const openAi=require("../config/openai")
 
@@ -82,13 +83,82 @@ Rules:
 `;
 
 console.log("PROMPT SENT TO GEMINI:", prompt);
+const response = await gemini.models.generateContent({
+    model: "gemini-3.5-flash-lite",
+    contents: prompt,
 
-  const response = await gemini.models.generateContent ({
-            model: "gemini-3.5-flash-lite",
-            contents: prompt
-        });
-         console.log("AI RESPONSE:", response.text);
-const aiResult=JSON.parse(response.text)
+    config: {
+        responseMimeType: "application/json",
+
+        responseSchema: {
+            type: Type.OBJECT,
+
+            properties: {
+                score: {
+                    type: Type.NUMBER
+                },
+
+                matchedKeywords: {
+                    type: Type.ARRAY,
+                    items: {
+                        type: Type.STRING
+                    }
+                },
+
+                missingKeywords: {
+                    type: Type.ARRAY,
+                    items: {
+                        type: Type.STRING
+                    }
+                },
+
+                missingSkills: {
+                    type: Type.ARRAY,
+                    items: {
+                        type: Type.STRING
+                    }
+                },
+
+                strengths: {
+                    type: Type.ARRAY,
+                    items: {
+                        type: Type.STRING
+                    }
+                },
+
+                weaknesses: {
+                    type: Type.ARRAY,
+                    items: {
+                        type: Type.STRING
+                    }
+                },
+
+                suggestions: {
+                    type: Type.ARRAY,
+                    items: {
+                        type: Type.STRING
+                    }
+                }
+            },
+
+            required: [
+                "score",
+                "matchedKeywords",
+                "missingKeywords",
+                "missingSkills",
+                "strengths",
+                "weaknesses",
+                "suggestions"
+            ]
+        }
+    }
+});
+ console.log("AI RESPONSE:", response.text);
+
+const aiResult = JSON.parse(response.text);
+
+  
+
        
 
         return res.status(200).json({
