@@ -87,8 +87,9 @@ console.log("PROMPT SENT TO GEMINI:", prompt);
             model: "gemini-3.5-flash-lite",
             contents: prompt
         });
+         console.log("AI RESPONSE:", response.text);
 const aiResult=JSON.parse(response.text)
-        console.log("AI RESPONSE:", response.text);
+       
 
         return res.status(200).json({
             msg: "GEMINI-AI connected successfully",
