@@ -40,13 +40,21 @@ router.post("/resend-otp",resendOtp)
 
 router.post("/logout",logoutuser)
 
-router.get("/me",userMiddleware,(req,res)=>{
-   return res.status(200).json({
-        name:req.user.name,
-        email:req.user.email
-    })
-})
+router.get("/me", (req, res, next) => {
 
+  console.log("COOKIE HEADER:", req.headers.cookie);
+  console.log("SESSION ID:", req.sessionID);
+  console.log("ME SESSION:", req.session);
 
+  next();
+
+}, userMiddleware, (req, res) => {
+
+  return res.status(200).json({
+    name: req.user.name,
+    email: req.user.email
+  });
+
+});
 
 module.exports=router;
