@@ -5,6 +5,8 @@ const User=require("../models/User")
 const userMiddleware=async(req,res,next)=>{
     try{
 
+        console.log("ME SESSION:", req.session);
+        console.log("ME USER ID:", req.session.userId);
        
 
     if(!req.session.userId){

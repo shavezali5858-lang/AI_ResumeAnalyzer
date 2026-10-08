@@ -1,6 +1,7 @@
 const dns = require("dns");
 
 dns.setDefaultResultOrder("ipv4first");
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 require("dotenv").config();
 
@@ -43,8 +44,10 @@ app.use(
 
         cookie: {
             httpOnly: true,
-            secure: true,
-            sameSite:"none",
+            // secure: true,
+            // sameSite:"none",
+              secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 1000 * 60 * 60
         }
     })
@@ -71,7 +74,7 @@ app.use("/api",analyzeRoute)
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>console.log("mongo db connected"))
 // .catch((err)=>console.log(err))
-.catch((err)=>console.log("mongo error",err.message))
+.catch((err)=>console.log("mongo error",err))
 
 app.listen(PORT,()=>console.log(`server started at port ${PORT}`))
 
