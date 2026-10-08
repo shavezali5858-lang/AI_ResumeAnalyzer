@@ -16,6 +16,7 @@ const Multerroutes=require("./routes/MulterRoutes")
 const analyzeRoute=require("./routes/Analyze")
 const mongoose=require("mongoose")
 const session=require("express-session")
+const MongoStore = require("connect-mongo").default;
 const cors=require("cors")
 
 
@@ -36,20 +37,23 @@ app.use(cors({
 app.use(express.json());
 
 
-app.use(
-    session({
-        secret: "mysecretkey",
-        resave: false,
-        saveUninitialized: false,
 
-        cookie: {
-            httpOnly: true,
-             secure: true,
-             sameSite:"none",
-              maxAge: 1000 * 60 * 60
-        }
-    })
-);
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI
+    }),
+
+    cookie: {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge: 60 * 60 * 1000
+    }
+}));
 
 app.get("/",(req,res)=>{
     res.send("server is working")
