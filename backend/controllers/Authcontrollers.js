@@ -164,7 +164,8 @@ console.log("LOGIN USER ID:", req.session.userId);
  return res.status(200).json({msg:"LOGIN SUCCESSFULLY!"})
 
 }catch(error){
-    return res.status(500).json({msg:"Log in failed!"})
+      console.log("LOGIN ERROR:", error);
+    return res.status(500).json({msg:"Log in failed!",error:error.message})
 }
 
 
