@@ -3,37 +3,47 @@ const nodemailer=require("nodemailer")
 
 
 // const resend = new Resend(process.env.RESEND_API_KEY);
+const nodemailer = require("nodemailer");
 
-const transporter=nodemailer.createTransport({
-    service:"gmail",
-    auth:{
-        user:process.env.EMAIL_USER,
-        pass:process.env.EMAIL_PASS
-    },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000
-})
 
+const transporter = nodemailer.createTransport({
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.BREVO_SMTP_LOGIN,
+    pass: process.env.BREVO_SMTP_KEY,
+  },
+});
 
 const Sendotp = async (email, otp) => {
-await transporter.sendMail({
-from: process.env.EMAIL_USER,
-to: email,
-subject: "Verify your email",
-text: `Your OTP for verification is ${otp}. It will expire in 10 minutes`,
-});
+  await transporter.sendMail({
+    from: `"AI Resume" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: "Verify your email",
+    text: `Your OTP for verification is ${otp}. It will expire in 10 minutes.`,
+  });
 };
+
 const sendResetemail = async (email, resetToken) => {
-await transporter.sendMail({
-from: process.env.EMAIL_USER,
-to: email,
-subject: "Reset your ResumeAI password",
-html: `       <p>Reset your password</p>       <p>Click below to reset your password:</p>       <a href="${process.env.FRONTEND_URL}/reset-password/${resetToken}">
-        Reset Password       </a>       <p>This link will expire in 15 minutes.</p>       <p>If you didn't request this, you can ignore this email.</p>
+  await transporter.sendMail({
+    from: `"AI Resume" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: "Reset your ResumeAI password",
+    html: `
+      <p>Reset your password</p>
+      <p>Click below to reset your password:</p>
+      <a href="${process.env.FRONTEND_URL}/reset-password/${resetToken}">
+        Reset Password
+      </a>
+      <p>This link will expire in 15 minutes.</p>
+      <p>If you didn't request this, you can ignore this email.</p>
     `,
-});
+  });
 };
+
+
+
 
 // const Sendotp = async (email, otp) => {
 //   try {
