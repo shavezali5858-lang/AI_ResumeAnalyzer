@@ -14,13 +14,27 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 //     greetingTimeout: 10000,
 //     socketTimeout: 10000
 // })
+
 const Sendotp = async (email, otp) => {
-    await resend.emails.send({
-        from: " AI Resume <onboarding@resend.dev>",
-        to: email,
-        subject: "Verify your email",
-        text: `Your OTP for verification is ${otp}. It will expire in 10 minutes.`
+  try {
+    const { data, error } = await resend.emails.send({
+      from: "AI Resume <onboarding@resend.dev>",
+      to: email,
+      subject: "Verify your email",
+      text: `Your OTP for verification is ${otp}. It will expire in 10 minutes.`
     });
+
+    if (error) {
+      console.error("RESEND OTP ERROR:", error);
+      throw new Error(error.message || "Failed to send OTP email");
+    }
+
+    console.log("OTP EMAIL ACCEPTED BY RESEND:", data?.id);
+    return data;
+  } catch (error) {
+    console.error("OTP EMAIL FAILED:", error.message);
+    throw error;
+  }
 };
 
 
