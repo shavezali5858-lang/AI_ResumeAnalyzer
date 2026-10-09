@@ -158,20 +158,19 @@ if(!ispasswordcorrect){
 req.session.userId=userlogin._id;
  console.log("LOGIN SESSION:", req.session);
 console.log("LOGIN USER ID:", req.session.userId);
-
 req.session.save((err) => {
-    if (err) {
-        console.log("SESSION SAVE ERROR:", err);
-        return res.status(500).json({ msg: "Session save failed" });
-    }
+  if (err) {
+    console.log("SESSION SAVE ERROR:", err);
+    return res.status(500).json({ msg: "Session save failed" });
+  }
 
-    console.log("SESSION SAVED:", req.session);
+  console.log("SESSION SAVED:", req.session);
+  console.log("SET-COOKIE:", res.getHeader("Set-Cookie"));
 
-    return res.status(200).json({
-        msg: "LOGIN SUCCESSFULLY!"
-    });
+  return res.status(200).json({
+    msg: "LOGIN SUCCESSFULLY!"
+  });
 });
-
 //  return res.status(200).json({msg:"LOGIN SUCCESSFULLY!"})
 
 }catch(error){
