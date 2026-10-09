@@ -5,42 +5,54 @@
 // const resend = new Resend(process.env.RESEND_API_KEY);
 const nodemailer = require("nodemailer");
 
-
-const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.BREVO_SMTP_LOGIN,
-    pass: process.env.BREVO_SMTP_KEY,
-  },
+const sendEmail = async ({ to, subject, textContent, htmlContent }) => {
+const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+method: "POST",
+headers: {
+accept: "application/json",
+"api-key": process.env.BREVO_API_KEY,
+"content-type": "application/json",
+},
+body: JSON.stringify({
+sender: {
+name: "AI Resume",
+email: process.env.EMAIL_USER,
+},
+to: [{ email: to }],
+subject,
+...(textContent && { textContent }),
+...(htmlContent && { htmlContent }),
+}),
 });
 
+const result = await response.json();
+
+if (!response.ok) {
+throw new Error(`Brevo API error ${response.status}: ${JSON.stringify(result)}`);
+}
+
+return result;
+};
+
 const Sendotp = async (email, otp) => {
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: email,
-    subject: "Verify your email",
-    text: `Your OTP for verification is ${otp}. It will expire in 10 minutes.`,
-  });
+return sendEmail({
+to: email,
+subject: "Verify your email",
+textContent: `Your OTP for verification is ${otp}. It will expire in 10 minutes.`,
+});
 };
 
 const sendResetemail = async (email, resetToken) => {
-  await transporter.sendMail({
-    from:process.env.EMAIL_USER,
-    to: email,
-    subject: "Reset your ResumeAI password",
-    html: `
-      <p>Reset your password</p>
-      <p>Click below to reset your password:</p>
-      <a href="${process.env.FRONTEND_URL}/reset-password/${resetToken}">
-        Reset Password
-      </a>
-      <p>This link will expire in 15 minutes.</p>
-      <p>If you didn't request this, you can ignore this email.</p>
+return sendEmail({
+to: email,
+subject: "Reset your ResumeAI password",
+htmlContent: `       <p>Reset your password</p>       <p>Click below to reset your password:</p>       <a href="${process.env.FRONTEND_URL}/reset-password/${resetToken}">
+        Reset Password       </a>       <p>This link will expire in 15 minutes.</p>       <p>If you didn't request this, you can ignore this email.</p>
     `,
-  });
+});
 };
+
+module.exports = { Sendotp,sendResetemail}
 
 
 
