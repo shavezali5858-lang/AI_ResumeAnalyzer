@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
 
 const Sendotp = async (email, otp) => {
   await transporter.sendMail({
-    from: `"AI Resume" <${process.env.EMAIL_USER}>`,
+    from: process.env.EMAIL_USER,
     to: email,
     subject: "Verify your email",
     text: `Your OTP for verification is ${otp}. It will expire in 10 minutes.`,
@@ -27,7 +27,7 @@ const Sendotp = async (email, otp) => {
 
 const sendResetemail = async (email, resetToken) => {
   await transporter.sendMail({
-    from: `"AI Resume" <${process.env.EMAIL_USER}>`,
+    from:process.env.EMAIL_USER,
     to: email,
     subject: "Reset your ResumeAI password",
     html: `
